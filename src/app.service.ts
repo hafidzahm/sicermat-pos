@@ -1,8 +1,36 @@
-import { Injectable } from '@nestjs/common';
+import { Global, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { MongoClient, Db, Collection } from 'mongodb';
 
+@Global()
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Hello World!';
+  constructor(private readonly configService: ConfigService) {}
+
+  async getDatabase(nameDatabase: string): Promise<Db> {
+    const MONGO_URI = this.configService.get<string>('MONGO_URI');
+    console.log(MONGO_URI, '<----- ENV');
+
+    // Create a MongoClient with a MongoClientOptions object to set the Stable API version
+    const client = new MongoClient(MONGO_URI as string);
+
+    try {
+      // Send a ping to confirm a successful connection
+      await client.db(nameDatabase).command({ ping: 1 });
+      console.log(
+        `Pinged your deployment. You successfully connected to MongoDB! on db ${nameDatabase}`,
+      );
+      return client.db(nameDatabase);
+    } catch (error) {
+      console.log('db connection fail');
+
+      await client.close();
+      throw error;
+    }
+  }
+
+  async getCollectionDevelopment(nameCollection: string): Promise<Collection> {
+    const database: Db = await this.getDatabase('SiCermat-DB');
+    return database.collection(nameCollection);
   }
 }
