@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AppService } from 'src/app.service';
+import { CreateUserDto } from './schema/user.schema';
 
 @Injectable()
 export class UserService {
@@ -10,12 +11,14 @@ export class UserService {
     return client;
   }
 
-  async registerNewUser(username: string, password: string) {
+  async registerNewUser(user: CreateUserDto) {
     try {
       const collection = await this.userCollection();
+      const { username, password, role } = user;
       await collection.insertOne({
         username,
         password,
+        role,
       });
       console.log('success register user!');
 

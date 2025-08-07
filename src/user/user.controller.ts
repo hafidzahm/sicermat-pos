@@ -1,16 +1,20 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UsePipes } from '@nestjs/common';
 import { UserService } from './user.service';
+import type { CreateUserDto } from './schema/user.schema';
+import { createUserSchema } from './schema/user.schema';
+import { ZodValidationPipe } from 'src/pipes/pipes';
 
 @Controller('/api/user')
 export class UserController {
   constructor(private readonly libs: UserService) {}
 
   @Post()
-  async registerNewUser(@Body() body: { username: string; password: string }) {
+  @UsePipes(new ZodValidationPipe(createUserSchema))
+  async registerNewUser(@Body() body: CreateUserDto) {
     try {
-      const { username, password } = body;
-      await this.libs.registerNewUser(username, password);
-      return { message: 'success register user', username };
+      const { username, role } = body;
+      await this.libs.registerNewUser(body);
+      return { message: 'success register user', username, role };
     } catch (error) {
       console.log(error);
     }
