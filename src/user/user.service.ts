@@ -15,14 +15,17 @@ export class UserService {
     try {
       const collection = await this.userCollection();
       const { username, password, role } = user;
-      await collection.insertOne({
+      const hashedPassword = this.lib.hashPassword(password);
+      const { acknowledged } = await collection.insertOne({
         username,
-        password,
+        password: hashedPassword,
         role,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       });
-      console.log('success register user!');
+      console.log({ statusRegisterUser: acknowledged });
 
-      return { username, password };
+      return { acknowledged };
     } catch (error) {
       console.log(error);
       throw error;
