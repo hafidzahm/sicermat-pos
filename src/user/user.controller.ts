@@ -1,4 +1,12 @@
-import { Body, Controller, HttpCode, Post, UsePipes } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  InternalServerErrorException,
+  Logger,
+  Post,
+  UsePipes,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import type { CreateUserDto } from './schema/user.schema';
 import { createUserSchema } from './schema/user.schema';
@@ -20,7 +28,11 @@ export class UserController {
         statusCreated: acknowledged,
       };
     } catch (error) {
-      console.log(error);
+      Logger.error(error);
+      throw new InternalServerErrorException('Cannot create new product', {
+        cause: new Error(),
+        description: 'Internal server error',
+      });
     }
   }
 }
