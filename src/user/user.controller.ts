@@ -12,7 +12,7 @@ import type { CreateUserDto } from './schema/user.schema';
 import { createUserSchema } from './schema/user.schema';
 import { ZodValidationPipe } from 'src/pipes/pipes';
 
-@Controller('/api/user')
+@Controller('/api/users')
 export class UserController {
   constructor(private readonly libs: UserService) {}
 
