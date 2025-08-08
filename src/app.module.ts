@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
+import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { UserModule } from './user/user.module';
       isGlobal: true, //konfigurasi env secara global
     }),
     UserModule,
+    ProductModule,
   ],
   controllers: [AppController],
   providers: [AppService],
