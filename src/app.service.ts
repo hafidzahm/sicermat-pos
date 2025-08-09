@@ -1,4 +1,4 @@
-import { Global, Injectable } from '@nestjs/common';
+import { Global, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MongoClient, Db, Collection } from 'mongodb';
 import bcrypt from 'bcryptjs';
@@ -18,12 +18,13 @@ export class AppService {
     try {
       // Send a ping to confirm a successful connection
       await client.db(nameDatabase).command({ ping: 1 });
-      console.log(
+      Logger.log(
         `You successfully connected to MongoDB! Currently on db ${nameDatabase}`,
+        'Database MongoDB Connector',
       );
       return client.db(nameDatabase);
     } catch (error) {
-      console.log(`db connection fail: ${error}`);
+      Logger.error(error, 'Database MongoDB Connection Error');
 
       await client.close();
       throw error;

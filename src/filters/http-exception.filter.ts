@@ -17,10 +17,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const message = exception.message;
 
     response.status(status).json({
-      message: message,
+      method: request.method,
       statusCode: status,
+      message: message,
       timestamp: new Date().toISOString(),
-      path: request.url,
     });
   }
 }
