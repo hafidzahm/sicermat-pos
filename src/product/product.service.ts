@@ -62,4 +62,10 @@ export class ProductService {
 
     return result;
   }
+
+  async getAllProducts() {
+    const collection = await this.productCollection();
+    const results = await collection.find().toArray();
+    return results;
+  }
 }

@@ -20,9 +20,9 @@ import { ProductService } from './product.service';
 @Controller('/api/products')
 export class ProductController {
   constructor(private libs: ProductService) {}
+
   // POST /api/product
   // create new product
-
   @Post()
   @HttpCode(201)
   @UsePipes(new ZodValidationPipe(productSchema))
@@ -44,6 +44,14 @@ export class ProductController {
         description: 'Internal server error',
       });
     }
+  }
+
+  // GET /api/product
+  // get all product
+  @Get()
+  async getAllProduct() {
+    const products = await this.libs.getAllProducts();
+    return { results: products };
   }
 
   // GET /api/product/:barcode
