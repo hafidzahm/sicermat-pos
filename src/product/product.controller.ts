@@ -2,6 +2,7 @@ import {
   Body,
   ConflictException,
   Controller,
+  Delete,
   Get,
   HttpCode,
   InternalServerErrorException,
@@ -63,6 +64,27 @@ export class ProductController {
         cause: error,
         description: 'Cannot get product by barcode',
       });
+    }
+  }
+
+  // DEL /api/product/:barcode
+  // DELETE product by barcode
+  @Delete('/:barcode')
+  async deleteProductByBarcode(@Param('barcode') barcode: string) {
+    try {
+      Logger.debug(barcode, 'barcodeToDelete');
+      const { acknowledged } = await this.libs.deleteProductByBarcode(barcode);
+      return {
+        status: acknowledged,
+        message: `Product with barcode ${barcode} deleted successfully`,
+      };
+    } catch (error) {
+      Logger.error(error, 'errorDelete');
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error);
+      }
+
+      throw new InternalServerErrorException('Internal server error');
     }
   }
 }

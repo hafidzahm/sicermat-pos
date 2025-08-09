@@ -52,4 +52,14 @@ export class ProductService {
     Logger.debug(foundProduct, 'Founded Product');
     return foundProduct;
   }
+
+  async deleteProductByBarcode(barcode: string) {
+    const collection = await this.productCollection();
+    // check product first, its the product already created?
+    await this.getProductByBarcode(barcode);
+    // if it found continue to delete logic, if not found will throw error from foundedProduct
+    const result = await collection.deleteOne({ barcode });
+
+    return result;
+  }
 }
