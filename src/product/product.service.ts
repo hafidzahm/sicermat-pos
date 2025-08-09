@@ -68,4 +68,31 @@ export class ProductService {
     const results = await collection.find().toArray();
     return results;
   }
+
+  async updateDetailProduct(barcode: string, newDetailProduct: ProductTypeDto) {
+    // check if the product has already been created
+    await this.getProductByBarcode(barcode);
+
+    const collection = await this.productCollection();
+
+    Logger.debug(newDetailProduct, 'updateDetailProduct');
+    const result = await collection.updateOne(
+      {
+        barcode,
+      },
+      {
+        $set: {
+          // Only allow updatable fields, omit 'barcode' and 'createdAt'
+          ...Object.fromEntries(
+            Object.entries(newDetailProduct).filter(
+              ([key]) => key !== 'barcode' && key !== 'createdAt',
+            ),
+          ),
+          updatedAt: new Date().toISOString(),
+        },
+      },
+    );
+
+    return result;
+  }
 }

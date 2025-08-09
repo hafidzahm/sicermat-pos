@@ -4,12 +4,12 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
   InternalServerErrorException,
   Logger,
   NotFoundException,
   Param,
   Post,
+  Put,
   UsePipes,
 } from '@nestjs/common';
 import { ZodValidationPipe } from 'src/pipes/pipes';
@@ -24,7 +24,6 @@ export class ProductController {
   // POST /api/product
   // create new product
   @Post()
-  @HttpCode(201)
   @UsePipes(new ZodValidationPipe(productSchema))
   async createNewProduct(@Body() product: ProductTypeDto) {
     try {
@@ -43,6 +42,49 @@ export class ProductController {
         cause: error,
         description: 'Internal server error',
       });
+    }
+  }
+
+  // PUT /api/product/:barcode
+  // update all detail product by barcode
+
+  // Issue documentation:
+
+  // Because @UsePipes at the method level runs the pipe for every parameter of the handler (Body, Param, Query, etc.).
+  // In your PUT handler, it tries to validate both:
+
+  // @Param('barcode') → a string
+  // @Body() → an object
+
+  // solution: Option B: Keep @UsePipes, but make the pipe skip non-body params.
+  // pipes ts:
+  //  // Only validate request body; pass through params/queries/etc.
+  // if (metadata.type !== 'body') return value;
+
+  @Put('/:barcode')
+  @UsePipes(new ZodValidationPipe(productSchema))
+  async updateDetailProductByBarcode(
+    @Body() product: ProductTypeDto,
+    @Param('barcode') barcode: string,
+  ) {
+    try {
+      Logger.debug(product, 'BodyInput');
+      const { acknowledged } = await this.libs.updateDetailProduct(
+        barcode,
+        product,
+      );
+
+      return {
+        status: acknowledged,
+        message: `Product with barcode ${barcode} updated successfully`,
+      };
+    } catch (error) {
+      Logger.error(error, 'errorUpdateProduct');
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error);
+      }
+
+      throw new InternalServerErrorException('Internal server error');
     }
   }
 
@@ -92,7 +134,10 @@ export class ProductController {
         throw new NotFoundException(error);
       }
 
-      throw new InternalServerErrorException('Internal server error');
+      throw new InternalServerErrorException('Internal server error', {
+        cause: error,
+        description: 'Cannot delete product by barcode',
+      });
     }
   }
 }
