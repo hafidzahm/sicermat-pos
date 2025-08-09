@@ -1,9 +1,13 @@
 import {
   Body,
+  ConflictException,
   Controller,
+  Get,
   HttpCode,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
+  Param,
   Post,
   UsePipes,
 } from '@nestjs/common';
@@ -15,6 +19,9 @@ import { ProductService } from './product.service';
 @Controller('/api/products')
 export class ProductController {
   constructor(private libs: ProductService) {}
+  // POST /api/product
+  // create new product
+
   @Post()
   @HttpCode(201)
   @UsePipes(new ZodValidationPipe(productSchema))
@@ -28,10 +35,33 @@ export class ProductController {
         message: `${product.name} successfully added`,
       };
     } catch (error) {
-      Logger.error(error);
+      if (error instanceof ConflictException) {
+        throw new ConflictException(error);
+      }
       throw new InternalServerErrorException('Cannot create new product', {
-        cause: new Error(),
+        cause: error,
         description: 'Internal server error',
+      });
+    }
+  }
+
+  // GET /api/product/:barcode
+  // get product by barcode
+  @Get('/:barcode')
+  async getProductByBarcode(@Param('barcode') barcode: string) {
+    try {
+      Logger.debug(barcode, 'barcode');
+      const result = await this.libs.getProductByBarcode(barcode);
+      Logger.debug(result, 'result');
+
+      return { result };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error);
+      }
+      throw new InternalServerErrorException('Internal server error', {
+        cause: error,
+        description: 'Cannot get product by barcode',
       });
     }
   }
