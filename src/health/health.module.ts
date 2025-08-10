@@ -5,7 +5,12 @@ import { MongoHealthIndicator } from './mongo.health';
 import { DatabaseModule } from '../common/helpers/database/database.module';
 
 @Module({
-  imports: [TerminusModule, DatabaseModule],
+  imports: [
+    TerminusModule.forRoot({
+      errorLogStyle: 'pretty',
+    }),
+    DatabaseModule,
+  ],
   controllers: [HealthController],
   providers: [MongoHealthIndicator],
 })
