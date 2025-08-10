@@ -12,7 +12,11 @@ export class DatabaseService {
     // console.log(MONGO_URI, '<----- ENV');
 
     // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-    const client = new MongoClient(MONGO_URI as string);
+    const client = new MongoClient(MONGO_URI as string, {
+      maxPoolSize: 10,
+      serverSelectionTimeoutMS: 1000, // 1s: pilih server cepat
+      socketTimeoutMS: 2000, // 2s: operasi socket
+    });
 
     try {
       // Send a ping to confirm a successful connection

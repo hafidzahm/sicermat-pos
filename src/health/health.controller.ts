@@ -1,0 +1,39 @@
+import { Controller, Get, HttpStatus } from '@nestjs/common';
+import { HealthCheck, HealthCheckService } from '@nestjs/terminus';
+import { MongoHealthIndicator } from './mongo.health';
+
+@Controller('/api/health')
+export class HealthController {
+  constructor(
+    private readonly health: HealthCheckService,
+    private readonly mongo: MongoHealthIndicator,
+  ) {}
+
+  @Get()
+  @HealthCheck()
+  liveness() {
+    return this.health.check([]);
+  }
+
+  @Get('/readiness')
+  @HealthCheck()
+  async readiness() {
+    const results = await this.health.check([
+      async () => this.mongo.isHealthy('mongo'),
+    ]);
+
+    // status Terminus = 'ok' bila semua up
+    const allGood = results.status === 'ok';
+    const statusCode = allGood ? HttpStatus.OK : HttpStatus.SERVICE_UNAVAILABLE;
+
+    const body = {
+      ...results,
+      timestamp: new Date().toISOString(),
+    };
+
+    return {
+      statusCode,
+      ...body,
+    };
+  }
+}
