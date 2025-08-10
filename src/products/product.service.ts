@@ -4,15 +4,15 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { AppService } from 'src/app.service';
 import type { ProductTypeDto } from './schema/product.schema';
+import { DatabaseService } from 'src/common/helpers/database/database.service';
 
 @Injectable()
 export class ProductService {
-  constructor(private libs: AppService) {}
+  constructor(private db: DatabaseService) {}
 
   async productCollection() {
-    const collection = await this.libs.getCollectionDevelopment('Products');
+    const collection = await this.db.getCollection('Products');
     return collection;
   }
 

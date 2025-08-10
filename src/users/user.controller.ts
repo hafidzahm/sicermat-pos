@@ -10,7 +10,7 @@ import {
 import { UserService } from './user.service';
 import type { CreateUserDto } from './schema/user.schema';
 import { createUserSchema } from './schema/user.schema';
-import { ZodValidationPipe } from 'src/pipes/pipes';
+import { ZodValidationPipe } from 'src/common/pipes/pipes';
 
 @Controller('/api/users')
 export class UserController {

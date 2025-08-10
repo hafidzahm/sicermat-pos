@@ -12,10 +12,10 @@ import {
   Put,
   UsePipes,
 } from '@nestjs/common';
-import { ZodValidationPipe } from 'src/pipes/pipes';
 import { productSchema } from './schema/product.schema';
 import type { ProductTypeDto } from './schema/product.schema';
 import { ProductService } from './product.service';
+import { ZodValidationPipe } from 'src/common/pipes/pipes';
 
 @Controller('/api/products')
 export class ProductController {
