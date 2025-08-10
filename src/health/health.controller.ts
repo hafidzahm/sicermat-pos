@@ -1,5 +1,9 @@
 import { Controller, Get, HttpStatus } from '@nestjs/common';
-import { HealthCheck, HealthCheckService } from '@nestjs/terminus';
+import {
+  HealthCheck,
+  HealthCheckService,
+  MemoryHealthIndicator,
+} from '@nestjs/terminus';
 import { MongoHealthIndicator } from './mongo.health';
 
 @Controller('/api/health')
@@ -7,6 +11,7 @@ export class HealthController {
   constructor(
     private readonly health: HealthCheckService,
     private readonly mongo: MongoHealthIndicator,
+    private readonly memory: MemoryHealthIndicator,
   ) {}
 
   @Get()
@@ -20,6 +25,8 @@ export class HealthController {
   async readiness() {
     const results = await this.health.check([
       async () => this.mongo.isHealthy('mongo'),
+      async () => this.memory.checkHeap('memory_heap', 150 * 1024 * 1024),
+      async () => this.memory.checkRSS('memory_rss', 150 * 1024 * 1024),
     ]);
 
     // status Terminus = 'ok' bila semua up
