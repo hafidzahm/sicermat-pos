@@ -15,7 +15,8 @@ export class DatabaseService {
     const client = new MongoClient(MONGO_URI as string);
 
     try {
-      client.db(nameDatabase);
+      // Send a ping to confirm a successful connection
+      await client.db(nameDatabase).command({ ping: 1 });
       Logger.log(
         `You successfully connected to MongoDB! Currently on db ${nameDatabase}`,
         'Database MongoDB Connector',
