@@ -2,24 +2,27 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { UserModule } from './users/user.module';
-import { ProductModule } from './products/product.module';
+import { envValidationSchema } from './common/config/env.validation';
+import { UserModule } from './modules/users/user.module';
+import { ProductModule } from './modules/products/product.module';
+import { HealthModule } from './modules/health/health.module';
+import { GroupStockOpnameModule } from './modules/group-stock-opname/group-stock-opname.module';
 import { DatabaseModule } from './common/helpers/database/database.module';
-import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath:
-        process.env.NODE_ENV === 'production'
-          ? '.env.production'
-          : '.env.development',
+      envFilePath: '.env.development',
+      validationSchema: envValidationSchema,
+      validationOptions: { abortEarly: false }, // tampilkan semua error env
+
       isGlobal: true, //konfigurasi env secara global
     }),
     UserModule,
     ProductModule,
     DatabaseModule,
     HealthModule,
+    GroupStockOpnameModule,
   ],
   controllers: [AppController],
   providers: [AppService],
