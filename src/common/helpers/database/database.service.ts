@@ -11,7 +11,7 @@ export class DatabaseService {
 
   async getDatabase(): Promise<Db> {
     if (this.client && this.db) {
-      Logger.debug({ client: this.client, db: this.db }, 'UndefinedDb');
+      // Logger.debug({ client: this.client, db: this.db }, 'UndefinedDb');
     }
 
     const uri = this.configService.get<string>('MONGO_URI');
