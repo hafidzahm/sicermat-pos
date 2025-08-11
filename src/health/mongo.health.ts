@@ -10,7 +10,7 @@ export class MongoHealthIndicator extends HealthIndicator {
 
   async isHealthy(key = 'value'): Promise<HealthIndicatorResult> {
     try {
-      const database = this.db.getDatabase('Sicermat-DB');
+      const database = this.db.getDatabase();
       await (await database).command({ ping: 1 });
       return this.getStatus(key, true);
     } catch (error) {
