@@ -7,6 +7,8 @@ import { ProductModule } from './products/product.module';
 import { DatabaseModule } from './common/helpers/database/database.module';
 import { HealthModule } from './health/health.module';
 import { envValidationSchema } from './common/config/env.validation';
+import { GroupStockOpnameController } from './group-stock-opname/group-stock-opname.controller';
+import { GroupStockOpnameModule } from './group-stock-opname/group-stock-opname.module';
 
 @Module({
   imports: [
@@ -21,6 +23,7 @@ import { envValidationSchema } from './common/config/env.validation';
     ProductModule,
     DatabaseModule,
     HealthModule,
+    GroupStockOpnameModule,
   ],
   controllers: [AppController],
   providers: [AppService],
