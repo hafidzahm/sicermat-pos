@@ -9,6 +9,7 @@ import { HealthModule } from './modules/health/health.module';
 import { GroupStockOpnameModule } from './modules/group-stock-opname/group-stock-opname.module';
 import { DatabaseModule } from './common/helpers/database/database.module';
 import { StockOpnamesModule } from './modules/stock-opnames/stock-opnames.module';
+import { DetailStockOpnameModule } from './modules/detail-stock-opname/detail-stock-opname.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { StockOpnamesModule } from './modules/stock-opnames/stock-opnames.module
     HealthModule,
     GroupStockOpnameModule,
     StockOpnamesModule,
+    DetailStockOpnameModule,
   ],
   controllers: [AppController],
   providers: [AppService],
