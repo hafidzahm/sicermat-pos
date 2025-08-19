@@ -6,7 +6,7 @@ import {
 } from './schema/detail-stock-opname.schema';
 import { DetailStockOpnameService } from './detail-stock-opname.service';
 
-@Controller('/api/stock-opname/details')
+@Controller('/api/stock-opnames/details')
 export class DetailStockOpnameController {
   constructor(private readonly libs: DetailStockOpnameService) {}
   @Post()

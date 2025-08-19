@@ -14,7 +14,7 @@ import { ZodValidationPipe } from 'src/common/pipes/pipes';
 import { groupStockOpnameSchema } from './schema/group-stock-opname.schema';
 import type { GroupStockOpnameDto } from './schema/group-stock-opname.schema';
 
-@Controller('api/stock-opname/groups')
+@Controller('api/stock-opnames/groups')
 export class GroupStockOpnameController {
   constructor(private readonly libs: GroupStockOpnameService) {}
 
