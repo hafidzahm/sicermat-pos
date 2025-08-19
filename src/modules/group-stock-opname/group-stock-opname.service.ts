@@ -1,6 +1,7 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from 'src/common/helpers/database/database.service';
-import { GroupStockOpnameDto } from './schema/group-stock-opname.schema';
+import { type GroupStockOpnameDto } from './schema/group-stock-opname.schema';
+import { ObjectId, WithId } from 'mongodb';
 
 @Injectable()
 export class GroupStockOpnameService {
@@ -23,6 +24,36 @@ export class GroupStockOpnameService {
       return acknowledged;
     } catch (error) {
       Logger.error(error, 'createNewGroupStockOpname');
+    }
+  }
+
+  async getItemById(id: string) {
+    const collection = await this.getCollection();
+    const foundedItem = await collection.findOne<WithId<GroupStockOpnameDto>>({
+      _id: new ObjectId(id),
+    });
+
+    Logger.debug(foundedItem, 'foundedItem');
+    if (!foundedItem) {
+      throw new NotFoundException('Group Stock Opname not found');
+    }
+
+    return {
+      item: foundedItem,
+      name: foundedItem?.groupName,
+    };
+  }
+
+  async deleteItemById(id: string) {
+    const collection = await this.getCollection();
+    const result = await this.getItemById(id);
+    const name = result.name;
+    if (result && result.item) {
+      const result = await collection.deleteOne({
+        _id: new ObjectId(id),
+      });
+
+      return { result, name };
     }
   }
 }
