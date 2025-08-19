@@ -6,6 +6,7 @@ import {
   Logger,
   Param,
   Post,
+  Put,
   UsePipes,
 } from '@nestjs/common';
 import { GroupStockOpnameService } from './group-stock-opname.service';
@@ -29,6 +30,12 @@ export class GroupStockOpnameController {
     };
   }
 
+  @Get()
+  async getAllGroupStockOpname() {
+    const result = await this.libs.getAllItem();
+    return { result };
+  }
+
   @Get(':id')
   async getGroupStockOpnameById(@Param('id') id: string) {
     const result = await this.libs.getItemById(id);
@@ -46,6 +53,19 @@ export class GroupStockOpnameController {
       status: result?.result?.acknowledged,
       name: result?.name,
       message: `Group Stock Opname with inputed id named '${result?.name}' deleted sucessfully`,
+    };
+  }
+
+  @Put(':id')
+  async updateDataGroupStockOpnameById(
+    @Body() body: GroupStockOpnameDto,
+    @Param('id') id: string,
+  ) {
+    const result = await this.libs.updateItemById(id, body);
+    return {
+      status: result?.result?.acknowledged,
+      name: result?.name,
+      message: `Group Stock Opname with name '${result?.name}' updated successfully`,
     };
   }
 }

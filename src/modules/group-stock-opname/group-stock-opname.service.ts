@@ -56,4 +56,27 @@ export class GroupStockOpnameService {
       return { result, name };
     }
   }
+
+  async updateItemById(id: string, data: GroupStockOpnameDto) {
+    const collection = await this.getCollection();
+    const updatedData = {
+      ...data,
+      updatedAt: new Date().toISOString(),
+    };
+    const foundedItem = await this.getItemById(id);
+    if (foundedItem && foundedItem.item) {
+      const result = await collection.updateOne(
+        {
+          _id: new ObjectId(id),
+        },
+        { $set: updatedData },
+      );
+      return { result, name: updatedData.groupName };
+    }
+  }
+
+  async getAllItem() {
+    const collection = await this.getCollection();
+    return await collection.find().toArray();
+  }
 }
