@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './schema/user.schema';
 import { BcryptService } from 'src/common/helpers/bcrypt/bcrypt.service';
 import { DatabaseService } from 'src/common/helpers/database/database.service';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class UserService {
@@ -34,5 +35,20 @@ export class UserService {
       console.log(error);
       throw error;
     }
+  }
+
+  async findUserById(id: string) {
+    const collection = await this.userCollection();
+    const findedUser = await collection.findOne({ _id: new ObjectId(id) });
+    if (!findedUser) {
+      throw new NotFoundException('User not found');
+    }
+
+    const userDto: { _id: string; username: string; role: string } = {
+      _id: findedUser._id.toString(),
+      username: findedUser.username as string,
+      role: findedUser.role as string,
+    };
+    return userDto;
   }
 }

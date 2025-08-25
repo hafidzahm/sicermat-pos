@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   InternalServerErrorException,
   Logger,
+  Param,
   Post,
   UsePipes,
 } from '@nestjs/common';
@@ -34,5 +36,11 @@ export class UserController {
         description: 'Internal server error',
       });
     }
+  }
+
+  @Get(':id')
+  async findUserById(@Param() id: string) {
+    const result = await this.libs.findUserById(id);
+    return result;
   }
 }
