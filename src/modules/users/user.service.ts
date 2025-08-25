@@ -33,7 +33,6 @@ export class UserService {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });
-      console.log({ statusRegisterUser: acknowledged });
 
       return { acknowledged };
     } catch (error) {
