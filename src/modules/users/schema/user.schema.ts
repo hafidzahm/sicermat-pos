@@ -7,3 +7,9 @@ export const createUserSchema = z.object({
 });
 
 export type CreateUserDto = z.infer<typeof createUserSchema>;
+
+export type ReturnUser = CreateUserDto & {
+  userId: string;
+};
+
+export type LoginUserDto = Omit<CreateUserDto, 'role'>;

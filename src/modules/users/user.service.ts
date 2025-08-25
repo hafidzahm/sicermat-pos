@@ -56,6 +56,17 @@ export class UserService {
     return userDto;
   }
 
+  async findUserByUsername(username: string) {
+    const collection = await this.userCollection();
+    const findedUser = await collection.findOne({ username: username });
+    Logger.debug({ findedUser, username }, 'findUserByUsername');
+    if (!findedUser) {
+      throw new NotFoundException('User not found');
+    }
+
+    return findedUser;
+  }
+
   async deleteItemById(id: string) {
     const collection = await this.userCollection();
     const foundedUser = await this.findItemById(id);

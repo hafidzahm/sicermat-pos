@@ -40,18 +40,27 @@ export class UserController {
   }
 
   @Get(':id')
-  async findUserById(@Param() id: string) {
+  async findUserById(@Param('id') id: string) {
     const result = await this.libs.findItemById(id);
     return result;
   }
 
   @Delete(':id')
-  async deleteUserById(@Param() id: string) {
+  async deleteUserById(@Param('id') id: string) {
     const result = await this.libs.deleteItemById(id);
     return {
       message: `User with username ${result?.username} deleted successfully`,
       status: result?.status,
       username: result?.username,
+    };
+  }
+
+  @Delete('/username/:usn')
+  async deleteUserByUsername(@Param('usn') usn: string) {
+    const result = await this.libs.findUserByUsername(usn);
+    return {
+      message: `User with username ${result?.username} deleted successfully`,
+      result,
     };
   }
 }
