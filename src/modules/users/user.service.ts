@@ -1,4 +1,9 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './schema/user.schema';
 import { BcryptService } from 'src/common/helpers/bcrypt/bcrypt.service';
 import { DatabaseService } from 'src/common/helpers/database/database.service';
@@ -37,7 +42,7 @@ export class UserService {
     }
   }
 
-  async findUserById(id: string) {
+  async findItemById(id: string) {
     const collection = await this.userCollection();
     const findedUser = await collection.findOne({ _id: new ObjectId(id) });
     if (!findedUser) {
@@ -50,5 +55,21 @@ export class UserService {
       role: findedUser.role as string,
     };
     return userDto;
+  }
+
+  async deleteItemById(id: string) {
+    const collection = await this.userCollection();
+    const foundedUser = await this.findItemById(id);
+    try {
+      if (foundedUser) {
+        await collection.deleteOne({
+          _id: new ObjectId(id),
+        });
+
+        return { username: foundedUser.username, status: 'success' };
+      }
+    } catch {
+      throw new InternalServerErrorException();
+    }
   }
 }

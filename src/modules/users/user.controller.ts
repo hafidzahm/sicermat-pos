@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   InternalServerErrorException,
@@ -40,7 +41,17 @@ export class UserController {
 
   @Get(':id')
   async findUserById(@Param() id: string) {
-    const result = await this.libs.findUserById(id);
+    const result = await this.libs.findItemById(id);
     return result;
+  }
+
+  @Delete(':id')
+  async deleteUserById(@Param() id: string) {
+    const result = await this.libs.deleteItemById(id);
+    return {
+      message: `User with username ${result?.username} deleted successfully`,
+      status: result?.status,
+      username: result?.username,
+    };
   }
 }
