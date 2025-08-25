@@ -1,9 +1,12 @@
 import {
   Body,
   Controller,
+  Delete,
+  Get,
   HttpCode,
   InternalServerErrorException,
   Logger,
+  Param,
   Post,
   UsePipes,
 } from '@nestjs/common';
@@ -34,5 +37,30 @@ export class UserController {
         description: 'Internal server error',
       });
     }
+  }
+
+  @Get(':id')
+  async findUserById(@Param('id') id: string) {
+    const result = await this.libs.findItemById(id);
+    return result;
+  }
+
+  @Delete(':id')
+  async deleteUserById(@Param('id') id: string) {
+    const result = await this.libs.deleteItemById(id);
+    return {
+      message: `User with username ${result?.username} deleted successfully`,
+      status: result?.status,
+      username: result?.username,
+    };
+  }
+
+  @Delete('/username/:usn')
+  async deleteUserByUsername(@Param('usn') usn: string) {
+    const result = await this.libs.findUserByUsername(usn);
+    return {
+      message: `User with username ${result?.username} deleted successfully`,
+      result,
+    };
   }
 }

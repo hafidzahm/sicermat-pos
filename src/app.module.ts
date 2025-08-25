@@ -10,6 +10,7 @@ import { GroupStockOpnameModule } from './modules/group-stock-opname/group-stock
 import { DatabaseModule } from './common/helpers/database/database.module';
 import { StockOpnamesModule } from './modules/stock-opnames/stock-opnames.module';
 import { DetailStockOpnameModule } from './modules/detail-stock-opname/detail-stock-opname.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { DetailStockOpnameModule } from './modules/detail-stock-opname/detail-st
     GroupStockOpnameModule,
     StockOpnamesModule,
     DetailStockOpnameModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

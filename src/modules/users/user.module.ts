@@ -8,5 +8,6 @@ import { DatabaseModule } from 'src/common/helpers/database/database.module';
   imports: [BcryptModule, DatabaseModule],
   controllers: [UserController],
   providers: [UserService],
+  exports: [UserService],
 })
 export class UserModule {}
