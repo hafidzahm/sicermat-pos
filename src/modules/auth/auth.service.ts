@@ -31,7 +31,7 @@ export class AuthService {
       userId: foundUser._id?.toString() ?? '',
       username: foundUser.username as string,
       password: foundUser.password as string,
-      role: foundUser.role as 'karyawan' | 'admin',
+      role: foundUser.role as ReturnUser['role'],
     };
     const passCondition = this.bcryptService.comparePassword(
       pass,
