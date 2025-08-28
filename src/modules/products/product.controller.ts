@@ -96,7 +96,7 @@ export class ProductController {
   // GET /api/product
   // get all product
 
-  @Roles(['karyawan']) //! pasang sepasang dengan useGuards(RoleGuard) atau useGlobalGuards di main ts buat global guards
+  @Roles(['karyawan']) //! pasang sepasang dengan useGuards(RoleGuard) per container atau useGlobalGuards di main ts buat global guards
   @Get()
   async getAllProduct() {
     const products = await this.libs.getAllProducts();
