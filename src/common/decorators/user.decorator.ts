@@ -1,4 +1,4 @@
-import { createParamDecorator, ExecutionContext, Logger } from '@nestjs/common';
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { AuthenticationRequest } from '../types/authentication.request.type';
 
 export const User = createParamDecorator(

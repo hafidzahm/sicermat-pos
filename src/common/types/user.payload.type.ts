@@ -1,5 +1,5 @@
 export type UserPayload = {
-  userLogin: {
+  user: {
     sub: string; // user id (JWT subject claim)
     username: string; // username of the user
     role: string; // role of the user (e.g., "karyawan")

@@ -8,7 +8,7 @@ export type AuthenticationRequest = Request & {
   user?: {
     sub: string;
     username: string;
-    roles: string;
+    role: string;
     iat: string;
     exp: string;
     // Add other relevant user properties as needed

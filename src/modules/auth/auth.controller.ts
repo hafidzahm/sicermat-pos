@@ -4,13 +4,11 @@ import {
   Post,
   HttpCode,
   HttpStatus,
-  UseGuards,
   Get,
   Res,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { type LoginUserDto } from '../users/schema/user.schema';
-import { AuthGuard } from '../../common/guards/auth.guard';
 
 import type { Response } from 'express';
 import { User } from 'src/common/decorators/user.decorator';
