@@ -10,6 +10,7 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
   UsePipes,
 } from '@nestjs/common';
 import { productSchema } from './schema/product.schema';

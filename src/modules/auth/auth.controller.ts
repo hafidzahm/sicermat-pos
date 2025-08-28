@@ -10,16 +10,17 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { type LoginUserDto } from '../users/schema/user.schema';
-import { AuthGuard } from './auth.guard';
+import { AuthGuard } from '../../common/guards/auth.guard';
 
 import type { Response } from 'express';
 import { User } from 'src/common/decorators/user.decorator';
 import { type UserPayload } from 'src/common/types/user.payload.type';
+import { Public } from 'src/common/metadatas/public.metadata';
 
 @Controller('api')
 export class AuthController {
   constructor(private authService: AuthService) {}
-
+  @Public() //!Public routes
   @HttpCode(HttpStatus.OK)
   @Post('login')
   async signIn(
@@ -35,7 +36,6 @@ export class AuthController {
     return { access_token };
   }
 
-  @UseGuards(AuthGuard)
   @Get('profile')
   getProfile(@User() userLogin: UserPayload) {
     // Logger.debug({ userLogin }, 'getProfile');
