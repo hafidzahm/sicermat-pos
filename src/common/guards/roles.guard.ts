@@ -23,12 +23,11 @@ export class RolesGuard implements CanActivate {
       return true;
     }
     const request: AuthenticationRequest = context.switchToHttp().getRequest();
-    const role = request.user;
-    //   ?.role as ReturnUser['role'];
-    Logger.debug(
-      { incomingUser: role, checkerRole: assignedRoles },
-      'DebugObject',
-    );
-    return true;
+    const userRole = request?.user?.role;
+
+    Logger.debug({ userRole, assignedRoles }, 'RolesGuard');
+
+    // !cek apakah role yang ditetapkan sama denga role yang user punya
+    return assignedRoles.some((role) => role === userRole);
   }
 }

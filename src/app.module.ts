@@ -13,6 +13,7 @@ import { DetailStockOpnameModule } from './modules/detail-stock-opname/detail-st
 import { AuthModule } from './modules/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './common/guards/roles.guard';
+import { AuthGuard } from './common/guards/auth.guard';
 
 @Module({
   imports: [
@@ -33,13 +34,6 @@ import { RolesGuard } from './common/guards/roles.guard';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard,
-    }, //! implement role-guard to all controller
-
-    AppService,
-  ],
+  providers: [AppService],
 })
 export class AppModule {}

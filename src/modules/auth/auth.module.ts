@@ -26,14 +26,7 @@ import { AuthGuard } from 'src/common/guards/auth.guard';
       }),
     }),
   ],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    }, //! bind all route protected, for not protected route, use @Public() decorator.
-    AuthService,
-    jwtConstants,
-  ],
+  providers: [AuthService, jwtConstants],
   controllers: [AuthController],
   exports: [AuthService],
 })

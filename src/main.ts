@@ -13,7 +13,10 @@ async function bootstrap() {
   // somewhere in your initialization file
   app.use(cookieParser());
   app.useGlobalFilters(new HttpExceptionFilter());
-  app.useGlobalGuards(new RolesGuard(new Reflector())); //!pasang satpam buat Roles
+  app.useGlobalGuards(
+    new AuthGuard(new JwtService(), new Reflector()),
+    new RolesGuard(new Reflector()),
+  );
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

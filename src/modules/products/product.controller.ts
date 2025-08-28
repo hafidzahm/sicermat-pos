@@ -21,6 +21,7 @@ import { Roles } from 'src/common/decorators/roles.decorator';
 import { User } from 'src/common/decorators/user.decorator';
 import { type UserPayload } from 'src/common/types/user.payload.type';
 import { RolesGuard } from 'src/common/guards/roles.guard';
+
 // @UseGuards(RolesGuard)
 @Controller('/api/products')
 export class ProductController {
@@ -96,7 +97,7 @@ export class ProductController {
   // GET /api/product
   // get all product
 
-  @Roles(['karyawan']) //! pasang sepasang dengan useGuards(RoleGuard) per container atau useGlobalGuards di main ts buat global guards
+  @Roles(['admin', 'karyawan']) //! pasang sepasang dengan useGuards(RoleGuard) per container atau useGlobalGuards di main ts buat global guards
   @Get()
   async getAllProduct() {
     const products = await this.libs.getAllProducts();
