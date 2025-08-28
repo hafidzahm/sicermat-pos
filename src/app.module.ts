@@ -11,6 +11,9 @@ import { DatabaseModule } from './common/helpers/database/database.module';
 import { StockOpnamesModule } from './modules/stock-opnames/stock-opnames.module';
 import { DetailStockOpnameModule } from './modules/detail-stock-opname/detail-stock-opname.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './common/guards/roles.guard';
+import { AuthGuard } from './common/guards/auth.guard';
 
 @Module({
   imports: [

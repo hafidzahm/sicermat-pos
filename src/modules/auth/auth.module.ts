@@ -6,6 +6,8 @@ import { AuthController } from './auth.controller';
 import { BcryptModule } from 'src/common/helpers/bcrypt/bcrypt.module';
 import { jwtConstants } from './auth.constants';
 import { ConfigService } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from 'src/common/guards/auth.guard';
 
 @Module({
   imports: [

@@ -10,13 +10,19 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
   UsePipes,
 } from '@nestjs/common';
 import { productSchema } from './schema/product.schema';
 import type { ProductTypeDto } from './schema/product.schema';
 import { ProductService } from './product.service';
 import { ZodValidationPipe } from 'src/common/pipes/pipes';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { User } from 'src/common/decorators/user.decorator';
+import { type UserPayload } from 'src/common/types/user.payload.type';
+import { RolesGuard } from 'src/common/guards/roles.guard';
 
+// @UseGuards(RolesGuard)
 @Controller('/api/products')
 export class ProductController {
   constructor(private libs: ProductService) {}
@@ -90,6 +96,8 @@ export class ProductController {
 
   // GET /api/product
   // get all product
+
+  @Roles(['admin', 'karyawan']) //! pasang sepasang dengan useGuards(RoleGuard) per container atau useGlobalGuards di main ts buat global guards
   @Get()
   async getAllProduct() {
     const products = await this.libs.getAllProducts();
