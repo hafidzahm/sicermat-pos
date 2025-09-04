@@ -29,7 +29,9 @@ export class ProductController {
 
   // POST /api/product
   // create new product
+
   @Post()
+  @Roles(['admin'])
   @UsePipes(new ZodValidationPipe(productSchema))
   async createNewProduct(@Body() product: ProductTypeDto) {
     try {
@@ -97,8 +99,8 @@ export class ProductController {
   // GET /api/product
   // get all product
 
-  @Roles(['admin', 'karyawan']) //! pasang sepasang dengan useGuards(RoleGuard) per container atau useGlobalGuards di main ts buat global guards
   @Get()
+  @Roles(['admin', 'karyawan']) //! pasang sepasang dengan useGuards(RoleGuard) per container atau useGlobalGuards di main ts buat global guards
   async getAllProduct() {
     const products = await this.libs.getAllProducts();
     return { results: products };
