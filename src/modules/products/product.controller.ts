@@ -10,7 +10,6 @@ import {
   Param,
   Post,
   Put,
-  UseGuards,
   UsePipes,
 } from '@nestjs/common';
 import { productSchema } from './schema/product.schema';
@@ -18,17 +17,15 @@ import type { ProductTypeDto } from './schema/product.schema';
 import { ProductService } from './product.service';
 import { ZodValidationPipe } from 'src/common/pipes/pipes';
 import { Roles } from 'src/common/decorators/roles.decorator';
-import { User } from 'src/common/decorators/user.decorator';
-import { type UserPayload } from 'src/common/types/user.payload.type';
-import { RolesGuard } from 'src/common/guards/roles.guard';
 
 // @UseGuards(RolesGuard)
 @Controller('/api/products')
 export class ProductController {
   constructor(private libs: ProductService) {}
 
-  // POST /api/product
-  // create new product
+  //? POST /api/product
+  //? create new product
+  //? role: admin only
 
   @Post()
   @Roles(['admin'])
@@ -53,23 +50,26 @@ export class ProductController {
     }
   }
 
-  // PUT /api/product/:barcode
-  // update all detail product by barcode
+  //? PUT /api/product/:barcode
+  //? update all detail product by barcode
+  //? role: admin only
 
-  // Issue documentation:
+  //! Issue documentation:
 
-  // Because @UsePipes at the method level runs the pipe for every parameter of the handler (Body, Param, Query, etc.).
-  // In your PUT handler, it tries to validate both:
+  //! Because @UsePipes at the method level runs the pipe for
+  //! every parameter of the handler (Body, Param, Query, etc.).
+  //! In your PUT handler, it tries to validate both:
 
-  // @Param('barcode') → a string
-  // @Body() → an object
+  //? @Param('barcode') → a string
+  //? @Body() → an object
 
-  // solution: Option B: Keep @UsePipes, but make the pipe skip non-body params.
-  // pipes ts:
-  //  // Only validate request body; pass through params/queries/etc.
-  // if (metadata.type !== 'body') return value;
+  //! solution: Option B: Keep @UsePipes, but make the pipe skip non-body params.
+  //? pipes ts:
+  //! Only validate request body; pass through params/queries/etc.
+  //? if (metadata.type !== 'body') return value;
 
   @Put('/:barcode')
+  @Roles(['admin'])
   @UsePipes(new ZodValidationPipe(productSchema))
   async updateDetailProductByBarcode(
     @Body() product: ProductTypeDto,
@@ -96,8 +96,9 @@ export class ProductController {
     }
   }
 
-  // GET /api/product
-  // get all product
+  //? GET /api/product
+  //? get all product
+  //? role: admin & karyawan
 
   @Get()
   @Roles(['admin', 'karyawan']) //! pasang sepasang dengan useGuards(RoleGuard) per container atau useGlobalGuards di main ts buat global guards
@@ -106,9 +107,12 @@ export class ProductController {
     return { results: products };
   }
 
-  // GET /api/product/:barcode
-  // get product by barcode
+  //? GET /api/product/:barcode
+  //? get product by barcode
+  //? role: admin & karyawan
+
   @Get('/:barcode')
+  @Roles(['admin', 'karyawan'])
   async getProductByBarcode(@Param('barcode') barcode: string) {
     try {
       Logger.debug(barcode, 'barcode');
@@ -127,9 +131,12 @@ export class ProductController {
     }
   }
 
-  // DEL /api/product/:barcode
-  // DELETE product by barcode
+  //? DEL /api/product/:barcode
+  //? DELETE product by barcode
+  //? role: admin only
+
   @Delete('/:barcode')
+  @Roles(['admin'])
   async deleteProductByBarcode(@Param('barcode') barcode: string) {
     try {
       Logger.debug(barcode, 'barcodeToDelete');
