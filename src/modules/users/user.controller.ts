@@ -7,6 +7,7 @@ import {
   InternalServerErrorException,
   Logger,
   Param,
+  Patch,
   Post,
   UsePipes,
 } from '@nestjs/common';
@@ -66,6 +67,20 @@ export class UserController {
     return {
       message: `User with username ${result?.username} deleted successfully`,
       result,
+    };
+  }
+
+  @Patch('/:userId/roles')
+  @Roles(['admin'])
+  async changeUserRole(
+    @Body('role') role: 'karyawan' | 'admin',
+    @Param('userId') userId: string,
+  ) {
+    const result = await this.libs.changeRole(userId, role);
+
+    return {
+      message: `username ${result.updatedUser.username} has updated role to ${result.updatedUser.role}`,
+      result: result.updatedUser,
     };
   }
 }

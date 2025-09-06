@@ -82,4 +82,16 @@ export class UserService {
       throw new InternalServerErrorException();
     }
   }
+
+  async changeRole(userId: string, role: 'karyawan' | 'admin') {
+    const collection = await this.userCollection();
+    await collection.updateOne(
+      { _id: new ObjectId(userId) },
+      { $set: { role: role, updatedAt: new Date().toISOString() } },
+    );
+
+    const updatedUser = await this.findItemById(userId);
+
+    return { updatedUser };
+  }
 }
