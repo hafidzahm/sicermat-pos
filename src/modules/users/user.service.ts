@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -24,6 +25,11 @@ export class UserService {
   async registerNewUser(user: CreateUserDto) {
     try {
       const collection = await this.userCollection();
+      const isDuplicateUsername = await this.checkIsUsernameDuplicate(
+        user.username,
+      );
+      Logger.debug(isDuplicateUsername, 'isUsernameDuplicateDetected');
+
       const { username, password, role } = user;
       const hashedPassword = this.bcrypt.hashPassword(password);
       const { acknowledged } = await collection.insertOne({
@@ -93,5 +99,18 @@ export class UserService {
     const updatedUser = await this.findItemById(userId);
 
     return { updatedUser };
+  }
+
+  async checkIsUsernameDuplicate(username: string) {
+    const collection = await this.userCollection();
+    const findedUser = await collection.findOne({
+      username,
+    });
+
+    const status = findedUser ? true : false;
+    if (status === true) {
+      throw new ConflictException(`username ${username} already exist`);
+    }
+    return { status };
   }
 }

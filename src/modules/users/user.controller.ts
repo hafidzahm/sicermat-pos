@@ -23,23 +23,14 @@ export class UserController {
 
   @Post()
   @UsePipes(new ZodValidationPipe(createUserSchema))
-  @HttpCode(201)
   @Roles(['admin'])
   async registerNewUser(@Body() body: CreateUserDto) {
-    try {
-      const { acknowledged } = await this.libs.registerNewUser(body);
+    const result = await this.libs.registerNewUser(body);
 
-      return {
-        message: 'success register user',
-        statusCreated: acknowledged,
-      };
-    } catch (error) {
-      Logger.error(error);
-      throw new InternalServerErrorException('Cannot create new product', {
-        cause: new Error(),
-        description: 'Internal server error',
-      });
-    }
+    return {
+      message: 'success register user',
+      statusCreated: result?.acknowledged,
+    };
   }
 
   @Get(':id')
@@ -57,16 +48,6 @@ export class UserController {
       message: `User with username ${result?.username} deleted successfully`,
       status: result?.status,
       username: result?.username,
-    };
-  }
-
-  @Delete('/username/:usn')
-  @Roles(['admin'])
-  async deleteUserByUsername(@Param('usn') usn: string) {
-    const result = await this.libs.findUserByUsername(usn);
-    return {
-      message: `User with username ${result?.username} deleted successfully`,
-      result,
     };
   }
 
